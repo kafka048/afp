@@ -56,6 +56,7 @@ model = SVC(kernel='linear')
 model.fit(X_train, y_train)
 
 y_predict = model.predict(X_test)
+print(y_predict)
 
 print("MODEL: SVM")
 print(f"Accuracy: {accuracy_score(y_test, y_predict)}")

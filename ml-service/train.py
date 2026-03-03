@@ -10,9 +10,9 @@ import pickle
 # 1. load the data
 # 2. provide the labels to each data file 
 # 3. combine the datasets and shuffle it using the ignore index 
-# 4. clean the text using the function and remove the reuters word from the dataset
-# 5. vectorise it using the tfidf vectoriser, set the maxfeatures, ngram range and also the stop words removal
-# 6. set the train test split 
+# 4. clean the text using the function and remove the reuters word from the dataset to make it less unbiased towards a publisher
+# 5. set the train test split
+# 6. fit and transform the train texts and just transform the test texts
 # 7. bring the svm model and train it
 # 8. evaluate the metrics 
 # 9. save the model
@@ -37,22 +37,22 @@ def clean_text(text: str) -> str:
 
 news_df['text'] = news_df['text'].apply(clean_text)
 
-
 texts = news_df['text'].values
 labels = news_df['label'].values
 
-vectorizer = TfidfVectorizer(max_features=6000, ngram_range=(1,2), stop_words='english')
-X = vectorizer.fit_transform(texts)
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
+X_train_texts, X_test_texts, y_train, y_test = train_test_split(
+    texts,
     labels,
     test_size=0.2,
     random_state=42,
     stratify=labels
 )
 
-model = SVC(kernel='linear')
+vectorizer = TfidfVectorizer(max_features=6000, ngram_range=(1,2), stop_words='english')
+X_train = vectorizer.fit_transform(X_train_texts)
+X_test = vectorizer.transform(X_test_texts)
+
+model = SVC(kernel='linear', probability=True)
 model.fit(X_train, y_train)
 
 y_predict = model.predict(X_test)

@@ -1,5 +1,5 @@
 import pickle
-from preprocessing import preprocessing_text
+from ml_service.app.preprocessing import preprocessing_text
 from pathlib import Path
 
 

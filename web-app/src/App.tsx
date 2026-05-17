@@ -27,7 +27,7 @@ export default function Page() {
 
     try {
       const response = await axios.post<PredictionResponse>(
-        "http://127.0.0.1:8000/predict",
+        "/predict",
         { text },
       );
       console.log(response.data);
